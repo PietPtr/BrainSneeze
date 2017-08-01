@@ -60,7 +60,7 @@ class Schedule(object):
                     else:
                         schedule[key] = home_loc
 
-        # yay side effects and lazyness
+        # yay side effects and laziness
         self.home_loc = home_loc
         self.mid_loc = mid_loc
 

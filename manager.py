@@ -4,9 +4,9 @@ import pygame
 from person import Person
 from location import Location
 #from settings import screen, black, white, gray, size, font, zoom
-import settings as s
+import settings
 
-MID_LOCATIONS = 1/8
+MID_LOCATIONS = 1/20
 EVE_LOCATIONS = 1/4
 HOME_LOCATIONS = 1 - MID_LOCATIONS - EVE_LOCATIONS
 
@@ -22,6 +22,19 @@ class Manager(object):
         self.locations = [self.mid_locs, self.eve_locs, self.home_locs]
 
         self.persons = self.gen_persons(n_persons)
+
+        self.persons[0].knows = True
+
+        print("Generating location presence lists.")
+        totallen = len(self.mid_locs) + len(self.eve_locs) + len(self.home_locs)
+        count = 0
+        for locs in self.locations:
+            for loc in locs:
+                if count % 10 == 0:
+                    print("  -> " + str(round(count / totallen * 100)) + "%")
+                loc.fill_presence(self.persons)
+                count += 1
+
         self.highlighted = 0
 
         print("Generating network.")
@@ -116,6 +129,27 @@ class Manager(object):
         return self.home_locs[r.randint(1, len(self.home_locs) - 1)]
 
     """
+    Brain sneeze functions
+    """
+    def spread_all(self):
+        for locs in self.locations:
+            for loc in locs:
+                loc.spread(self)
+
+    def reset(self):
+        for person in self.persons:
+            person.knows = False
+
+        self.persons[r.randint(0, len(self.persons) - 1)].knows = True
+
+    def perc_knows(self):
+        knows = 0
+        for person in self.persons:
+            if person.knows:
+                knows += 1
+        return knows / len(self.persons) * 100
+
+    """
     Draws everyone in large square with lines between them
     """
     def draw_all_persons(self, x, y):
@@ -171,11 +205,26 @@ class Manager(object):
     """
     Draws everyone in their location at a given time
     """
-    def draw_locations(self, x, y, hour, day):
-        for locs in self.locations:
-            for loc in locs:
-                print( loc.id)
+    def draw_locations(self, x, y):
+        prevpos = [x, y]
 
+        highestydiff = 0
+
+        colors = [(255, 100, 100), (100, 255, 100), (100, 100, 255)]
+
+        count = 0
+        for locs in self.locations:
+            color = colors[count]
+            for loc in locs:
+                if loc.get_num_presence(settings.hour, settings.day) > 0:
+                    diff = loc.draw(self, prevpos[0] + x, prevpos[1] + y, color)
+                    prevpos[0] += diff[0] + 2
+                    highestydiff = max(diff[1], highestydiff)
+                    if prevpos[0] > (settings.width * 0.9) + x:
+                        prevpos[1] += highestydiff + 4
+                        prevpos[0] = x
+                        highestydiff = 0
+            count += 1
     """
     Draws all persons and the the network at (x, y)
 

@@ -5,7 +5,7 @@ import math
 import settings as s
 
 print("Initializing model info.")
-NUMP = 132
+NUMP = 700
 manager = Manager(NUMP)
 
 import pygame
@@ -19,7 +19,10 @@ frame = 0
 
 zoom = 1
 
-draw_mode = "square"
+draw_mode = "location"
+
+NXTHR = 10
+nexthour = NXTHR
 
 while True:
     for event in pygame.event.get():
@@ -42,6 +45,11 @@ while True:
                 draw_mode = "square"
             if event.key == pygame.K_l:
                 draw_mode = "location"
+            if event.key == pygame.K_n:
+                s.add_hour(manager)
+            if event.key == pygame.K_r:
+                manager.reset()
+
 
     """
     Updates & Logic
@@ -52,6 +60,12 @@ while True:
         draw[0] += mov[0] * 1 / s.zoom
         draw[1] += mov[1] * 1 / s.zoom
 
+    if pygame.key.get_pressed()[pygame.K_SPACE]:
+        nexthour -= 1
+
+    if nexthour <= 0:
+        nexthour = NXTHR
+        s.add_hour(manager)
 
     """
     Drawing
@@ -62,6 +76,9 @@ while True:
         manager.draw_all_persons(draw[0], draw[1])
     elif draw_mode == "location":
         manager.draw_locations(draw[0], draw[1])
+
+    timetext = s.bigfont.render(s.days[s.day] + " " + str(s.hour) + ":00 | " + str(round(manager.perc_knows(), 1)) + "% knows", False, s.white)
+    s.screen.blit(timetext, (0, 8))
 
     pygame.display.flip()
 

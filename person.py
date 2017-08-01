@@ -10,6 +10,7 @@ class Person(object):
         self.initials = self.random_initials()
         self.color = (r.randint(64, 255), r.randint(64, 255), \
             r.randint(64, 255))
+        self.knows = False
 
     def random_initials(self):
         num = int(r.gauss(3, 0.5))
@@ -26,7 +27,11 @@ class Person(object):
         return initials
 
     def draw(self, surface, x, y, highlighted):
-        text = settings.font.render(self.initials, False, self.color)
+        color = self.color
+        if self.knows:
+            color = settings.red
+
+        text = settings.font.render(self.initials, False, color)
 
         width = text.get_width()
         height = text.get_height()
@@ -36,7 +41,7 @@ class Person(object):
             x * settings.zoom - width / 2, y * settings.zoom - height / 2, \
             width, height))
 
-        pygame.draw.rect(surface, self.color, pygame.Rect(\
+        pygame.draw.rect(surface, color, pygame.Rect(\
             x * settings.zoom - width / 2, y * settings.zoom - height / 2, \
             width, height), 2 if highlighted else 1)
 
