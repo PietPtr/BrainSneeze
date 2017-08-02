@@ -27,7 +27,8 @@ class Schedule(object):
         if work_days < 5:
             start_day = r.randint(0, 5 - work_days)
 
-        work_start_time = int(r.gauss(7, 1.5))
+        work_start_time = int(r.gauss(9, 1))
+        print (work_start_time)
 
         sleep_in_time = r.gauss(9, 0.5)
 
@@ -43,9 +44,9 @@ class Schedule(object):
                 # if workday ...
                 if day >= start_day and day <= start_day + work_days and work_days > 0:
                     # set sleep rythm
-                    if hour < work_start_time:
+                    if hour < work_start_time - 2:
                         schedule[key] = 0
-                    elif hour > 24 - (work_start_time - 8):
+                    elif hour > 24 + ((work_start_time - 2) - 9):
                         schedule[key] = 0
                     # set work rythm
                     elif hour >= work_start_time and hour <= work_start_time + \

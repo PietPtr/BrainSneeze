@@ -49,6 +49,9 @@ while True:
                 s.add_hour(manager)
             if event.key == pygame.K_r:
                 manager.reset()
+            if event.key == pygame.K_h:
+                for h in (s.history):
+                    print(h)
 
 
     """
