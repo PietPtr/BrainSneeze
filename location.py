@@ -41,7 +41,7 @@ class Location(object):
         for p_index in present:
             person = manager.persons[p_index]
 
-            if True:#person.knows:
+            if person.knows:
                 totalc = 0
 
                 contacts = manager.network[manager.persons[p_index]]
@@ -53,8 +53,10 @@ class Location(object):
                     if p_index_present == p_index:
                         continue # same person, ignore
 
-                    if random.uniform(0, 1) < contacts[p_index_present] / totalc * 0.1:
+                    if random.uniform(0, 1) < contacts[p_index_present] / \
+                            totalc:
                         manager.persons[p_index_present].knows = True
+                        #print("Spread from " + person.initials + " to " + manager.persons[p_index_present].initials)
 
 
     def draw(self, manager, x, y, color):

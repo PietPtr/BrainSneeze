@@ -5,7 +5,7 @@ import math
 import settings as s
 
 print("Initializing model info.")
-NUMP = 700
+NUMP = 132
 manager = Manager(NUMP)
 
 import pygame

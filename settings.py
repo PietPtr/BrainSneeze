@@ -7,7 +7,9 @@ every drawing function needs it as an argument.
 
 pygame.font.init()
 
-size = width, height = 1920, 1080
+# size = width, height = 1920, 1080
+size = width, height = 1280, 720
+
 black = 0, 0, 0
 gray = 50, 50, 50
 white = 255, 255, 255
@@ -23,22 +25,32 @@ bigfont = pygame.font.SysFont('Monospace', 24)
 
 zoom = 1
 
-hour = 14
+hour = 0
 day = 0
+totalday = 0
 
 history = []
 
 def add_hour(manager):
     global hour
     global day
+    global totalday
 
     hour += 1
     if hour > 23:
         hour = 0
-        day += 1
-        if day > 6:
-            day = 0
+        totalday += 1
+        day = totalday % 7
 
     manager.spread_all()
 
     history.append((hour, day, manager.perc_knows()))
+
+def reset_time():
+    global hour
+    global day
+    global totalday
+
+    hour = 0
+    day = 0
+    totalday = 0

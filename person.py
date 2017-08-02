@@ -8,7 +8,7 @@ class Person(object):
         self.manager = manager
         self.schedule = Schedule(manager) # assign random schedule to person
         self.initials = self.random_initials()
-        self.color = (r.randint(64, 255), r.randint(64, 255), \
+        self.color = (r.randint(64, 100), r.randint(64, 255), \
             r.randint(64, 255))
         self.knows = False
 
@@ -30,6 +30,10 @@ class Person(object):
         color = self.color
         if self.knows:
             color = settings.red
+        if self.schedule.schedule[str(settings.hour) + "-" + \
+            str(settings.day)] == 0:
+            color = settings.gray
+
 
         text = settings.font.render(self.initials, False, color)
 

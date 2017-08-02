@@ -142,6 +142,8 @@ class Manager(object):
 
         self.persons[r.randint(0, len(self.persons) - 1)].knows = True
 
+        settings.reset_time()
+
     def perc_knows(self):
         knows = 0
         for person in self.persons:
