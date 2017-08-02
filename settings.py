@@ -28,6 +28,7 @@ zoom = 1
 hour = 0
 day = 0
 totalday = 0
+key = str(hour) + "-" + str(day)
 
 history = []
 
@@ -35,6 +36,7 @@ def add_hour(manager):
     global hour
     global day
     global totalday
+    global key
 
     hour += 1
     if hour > 23:
@@ -42,15 +44,24 @@ def add_hour(manager):
         totalday += 1
         day = totalday % 7
 
+    key = str(hour) + "-" + str(day)
+
     manager.spread_all()
 
-    history.append((hour, day, manager.perc_knows()))
+    history.append((hour, day, manager.perc_knows(), manager.perc_sleeps(), \
+        manager.perc_working()))
+
 
 def reset_time():
     global hour
     global day
     global totalday
+    global key
+    global history
 
     hour = 0
     day = 0
     totalday = 0
+    key = str(hour) + "-" + str(day)
+
+    history = []

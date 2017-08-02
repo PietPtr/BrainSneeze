@@ -144,12 +144,32 @@ class Manager(object):
 
         settings.reset_time()
 
+    """
+    Statistics functions
+    """
+
     def perc_knows(self):
         knows = 0
         for person in self.persons:
             if person.knows:
                 knows += 1
         return knows / len(self.persons) * 100
+
+    def perc_sleeps(self):
+        sleeping = 0
+        for person in self.persons:
+            if person.schedule.schedule[settings.key] == 0:
+                sleeping += 1
+
+        return sleeping / len(self.persons) * 100
+
+    def perc_working(self):
+        working = 0
+        for person in self.persons:
+            if person.schedule.schedule[settings.key] == person.schedule.mid_loc:
+                working += 1
+
+        return working / len(self.persons) * 100
 
     """
     Draws everyone in large square with lines between them
@@ -205,7 +225,7 @@ class Manager(object):
         settings.screen.blit(person_surface, (0, 0))
 
     """
-    Draws everyone in their location at a given time
+    Draws everyone in their location at the current time
     """
     def draw_locations(self, x, y):
         prevpos = [x, y]
@@ -227,6 +247,44 @@ class Manager(object):
                         prevpos[0] = x
                         highestydiff = 0
             count += 1
+
+    """
+    Draws the history of this simulation in graph form
+    """
+    def draw_stats(self, x, y):
+        if len(settings.history) < 2:
+            return
+
+        XDIFF = 100
+        YDIFF = 400
+        BASEZOOM = 4
+
+        colors = [(255, 0, 0), (0, 255, 0), (50, 50, 255)]
+        names = ["- % knows", "- % sleeping", "- % at work"]
+
+        graphs = []
+        for i in range(0, len(settings.history[0]) - 2):
+            graphs.append([])
+
+        count = 0
+        for hour in settings.history:
+            for stat in range(0, len(settings.history[0]) - 2):
+                px = (x + count * 7) * settings.zoom + XDIFF
+                py = (y - (hour[stat + 2]) * 3) * settings.zoom + 50 + YDIFF
+                graphs[stat].append((px, py))
+
+            count += 1
+
+        for g in range(0, len(graphs)):
+            nametext = settings.font.render(names[g], False, colors[g])
+            textdim = settings.font.size(names[g])
+            settings.screen.blit(nametext, (\
+                (x) * settings.zoom + XDIFF - textdim[0] - 5, \
+                (y + YDIFF) * settings.zoom + g * textdim[1]))
+
+            pygame.draw.lines(settings.screen, colors[g], False, graphs[g], 1)
+
+
     """
     Draws all persons and the the network at (x, y)
 

@@ -5,7 +5,7 @@ import math
 import settings as s
 
 print("Initializing model info.")
-NUMP = 132
+NUMP = 64
 manager = Manager(NUMP)
 
 import pygame
@@ -13,7 +13,7 @@ import sys
 
 pygame.init()
 
-draw = [220, 60]
+draw = [40, 60]
 
 frame = 0
 
@@ -50,8 +50,7 @@ while True:
             if event.key == pygame.K_r:
                 manager.reset()
             if event.key == pygame.K_h:
-                for h in (s.history):
-                    print(h)
+                draw_mode = "stats"
 
 
     """
@@ -79,6 +78,8 @@ while True:
         manager.draw_all_persons(draw[0], draw[1])
     elif draw_mode == "location":
         manager.draw_locations(draw[0], draw[1])
+    elif draw_mode == "stats":
+        manager.draw_stats(draw[0], draw[1])
 
     timetext = s.bigfont.render(s.days[s.day] + " " + str(s.hour) + ":00 | " + str(round(manager.perc_knows(), 1)) + "% knows", False, s.white)
     s.screen.blit(timetext, (0, 8))
