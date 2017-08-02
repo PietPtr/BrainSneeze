@@ -30,6 +30,8 @@ day = 0
 totalday = 0
 key = str(hour) + "-" + str(day)
 
+spread_chance = 0.1
+
 history = []
 
 def add_hour(manager):

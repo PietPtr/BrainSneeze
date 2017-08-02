@@ -53,8 +53,7 @@ class Location(object):
                     if p_index_present == p_index:
                         continue # same person, ignore
 
-                    if random.uniform(0, 1) < contacts[p_index_present] / \
-                            totalc:
+                    if random.uniform(0, 1) < s.spread_chance:
                         manager.persons[p_index_present].knows = True
                         #print("Spread from " + person.initials + " to " + manager.persons[p_index_present].initials)
 

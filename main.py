@@ -51,6 +51,14 @@ while True:
                 manager.reset()
             if event.key == pygame.K_h:
                 draw_mode = "stats"
+            if event.key == pygame.K_PAGEUP:
+                s.spread_chance += 0.01
+            if event.key == pygame.K_PAGEDOWN:
+                s.spread_chance -= 0.01
+            if event.key == pygame.K_HOME:
+                s.spread_chance += 0.1
+            if event.key == pygame.K_END:
+                s.spread_chance -= 0.1
 
 
     """
@@ -69,6 +77,11 @@ while True:
         nexthour = NXTHR
         s.add_hour(manager)
 
+    if s.spread_chance > 1:
+        s.spread_chance = 1
+    if s.spread_chance < 0:
+        s.spread_chance = 0
+
     """
     Drawing
     """
@@ -81,7 +94,10 @@ while True:
     elif draw_mode == "stats":
         manager.draw_stats(draw[0], draw[1])
 
-    timetext = s.bigfont.render(s.days[s.day] + " " + str(s.hour) + ":00 | " + str(round(manager.perc_knows(), 1)) + "% knows", False, s.white)
+    infostr = s.days[s.day] + " " + str(s.hour) + ":00 | " + \
+        str(round(manager.perc_knows(), 1)) + "% knows | p(spread): " + \
+        str(round(s.spread_chance, 2))
+    timetext = s.bigfont.render(infostr, False, s.white)
     s.screen.blit(timetext, (0, 8))
 
     pygame.display.flip()
