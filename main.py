@@ -1,12 +1,16 @@
 from person import Person
 from manager import Manager
 import math
-#from settings import screen, black, white, gray, size, font
 import settings as s
+import sys
 
 print("Initializing model info.")
-NUMP = 142
-manager = Manager(NUMP)
+
+if len(sys.argv) >= 2:
+    manager = Manager(0, sys.argv[1])
+else:
+    NUMP = 63
+    manager = Manager(NUMP)
 
 import pygame
 import sys
@@ -62,6 +66,8 @@ while True:
             if event.key == pygame.K_v:
                 draw = [40, 60]
                 s.zoom = 1
+            if event.key == pygame.K_PRINT:
+                manager.save("network.json")
 
 
     """

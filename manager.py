@@ -3,15 +3,21 @@ import math
 import pygame
 from person import Person
 from location import Location
-#from settings import screen, black, white, gray, size, font, zoom
 import settings
+import json
 
 MID_LOCATIONS = 1/20
 EVE_LOCATIONS = 1/4
 HOME_LOCATIONS = 1 - MID_LOCATIONS - EVE_LOCATIONS
 
 class Manager(object):
-    def __init__(self, n_persons):
+    def __init__(self, n_persons, filename=False):
+        if filename == False:
+            self.generate(n_persons)
+        else:
+            self.load(filename)
+
+    def generate(self, n_persons):
         print("Generating persons & locations.")
         self.mid_locs = self.gen_locations(n_persons * MID_LOCATIONS, 0)
         self.eve_locs = self.gen_locations(n_persons * EVE_LOCATIONS,\
@@ -39,7 +45,6 @@ class Manager(object):
 
         print("Generating network.")
         self.network = self.gen_network()
-
 
     """
     Generates the sets of people and locations
@@ -334,3 +339,13 @@ class Manager(object):
             count += 1
 
         self.persons[index].draw(screen, x, y)
+
+    """
+    Saving and loading networks
+    """
+    def save(self, filename):
+        #print(json.dumps(self.network))
+        print(self.network)
+
+    def load(self, filename):
+        print("not implemented")
