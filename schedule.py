@@ -28,7 +28,6 @@ class Schedule(object):
             start_day = r.randint(0, 5 - work_days)
 
         work_start_time = int(r.gauss(9, 1))
-        print (work_start_time)
 
         sleep_in_time = r.gauss(9, 0.5)
 

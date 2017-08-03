@@ -256,11 +256,11 @@ class Manager(object):
             return
 
         XDIFF = 100
-        YDIFF = 400
+        YDIFF = settings.height - 32
         BASEZOOM = 4
 
         colors = [(255, 0, 0), (0, 255, 0), (50, 50, 255)]
-        names = ["- % knows", "- % sleeping", "- % at work"]
+        names = [" % knows", " % sleeping", " % at work"]
 
         graphs = []
         for i in range(0, len(settings.history[0]) - 2):
@@ -269,8 +269,8 @@ class Manager(object):
         count = 0
         for hour in settings.history:
             for stat in range(0, len(settings.history[0]) - 2):
-                px = (x + count * 7) * settings.zoom + XDIFF
-                py = (y - (hour[stat + 2]) * 3) * settings.zoom + 50 + YDIFF
+                px = (x + count * 10) * settings.zoom + XDIFF
+                py = ( -(hour[stat + 2]) * (settings.height / 100) * 0.9) + YDIFF
                 graphs[stat].append((px, py))
 
             count += 1
@@ -278,11 +278,23 @@ class Manager(object):
         for g in range(0, len(graphs)):
             nametext = settings.font.render(names[g], False, colors[g])
             textdim = settings.font.size(names[g])
-            settings.screen.blit(nametext, (\
-                (x) * settings.zoom + XDIFF - textdim[0] - 5, \
-                (y + YDIFF) * settings.zoom + g * textdim[1]))
+            # settings.screen.blit(nametext, (\
+            #     (x) * settings.zoom + XDIFF - textdim[0] - 5, \
+            #     (y + YDIFF) * settings.zoom + g * textdim[1]))
+
+            textx = graphs[g][len(graphs[g]) - 1][0]
+            texty = graphs[g][len(graphs[g]) - 1][1] - textdim[1] / 2
+
+            settings.screen.blit(nametext, (textx, texty))
+
+            if self.highlighted % len(graphs) == g:
+                continue
 
             pygame.draw.lines(settings.screen, colors[g], False, graphs[g], 1)
+
+        h_index = self.highlighted % len(graphs)
+        pygame.draw.lines(settings.screen, colors[h_index], False, \
+            graphs[h_index], 3)
 
 
     """

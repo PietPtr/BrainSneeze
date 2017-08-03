@@ -5,7 +5,7 @@ import math
 import settings as s
 
 print("Initializing model info.")
-NUMP = 128
+NUMP = 142
 manager = Manager(NUMP)
 
 import pygame
@@ -59,7 +59,7 @@ while True:
                 s.spread_chance += 0.1
             if event.key == pygame.K_END:
                 s.spread_chance -= 0.1
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_v:
                 draw = [40, 60]
                 s.zoom = 1
 
