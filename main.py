@@ -9,7 +9,7 @@ print("Initializing model info.")
 if len(sys.argv) >= 2:
     manager = Manager(0, sys.argv[1])
 else:
-    NUMP = 63
+    NUMP = 2500
     manager = Manager(NUMP)
 
 import pygame

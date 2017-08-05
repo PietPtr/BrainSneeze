@@ -5,6 +5,7 @@ from person import Person
 from location import Location
 import settings
 import json
+import time
 
 MID_LOCATIONS = 1/20
 EVE_LOCATIONS = 1/4
@@ -33,13 +34,24 @@ class Manager(object):
 
         print("Generating location presence lists.")
         totallen = len(self.mid_locs) + len(self.eve_locs) + len(self.home_locs)
+        start_loc_gen = time.time()
         count = 0
         for locs in self.locations:
             for loc in locs:
-                if count % 10 == 0:
-                    print("  -> " + str(round(count / totallen * 100)) + "%")
                 loc.fill_presence(self.persons)
+
+                if count % 10 == 0:
+                    part_done = count / totallen
+                    if part_done == 0:
+                        count += 1
+                        continue
+                    print("  -> " + str(round(part_done * 100)) + "%,",\
+                        round(((1 / part_done) * (1 - part_done)) * \
+                        (time.time() - start_loc_gen), 2), "seconds left...")
+
                 count += 1
+
+        print("  -> 100%, 0.0 seconds left :D")
 
         self.highlighted = 0
 
@@ -71,10 +83,9 @@ class Manager(object):
     def gen_network(self):
         network = {} # {pid: {pid: closeness, ...}, ...}
 
+        start_net_gen = time.time()
         count = 0
         for person in self.persons:
-            if count % 10 == 0:
-                print("  -> " + str(int(count / len(self.persons) * 100)) + "%")
 
             contacts = {} # {pid: closeness}
 
@@ -92,9 +103,19 @@ class Manager(object):
                             contacts[pid] = close_mod
 
             network[person] = contacts
+
+            if count % 10 == 0:
+                part_done = count / len(self.persons)
+                if part_done == 0:
+                    count += 1
+                    continue
+                print("  -> " + str(int(part_done * 100)) + "%,",\
+                    round(((1 / part_done) * (1 - part_done)) * \
+                    (time.time() - start_net_gen), 2), "seconds left...")
+
             count += 1
 
-        print("  -> 100%")
+        print("  -> 100%, 0.0 seconds left :D")
 
         return network
 
